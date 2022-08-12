@@ -1,28 +1,26 @@
-[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
-# Проект Mesto фронтенд + бэкенд
+[![Tests](https://github.com/otr-web-study/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/otr-web-study/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/otr-web-study/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/otr-web-study/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
+# Учебный проект: express-mesto-gha
 
-
-
-## Настройка бейджей статуса тестов
-Перед началом работы над проектом рекомендуется исправить бейджи, отражающие статус прохождения тестов.
-Для этого замените разметку бейджей на следующий фрагмент, подставив вместо `${имя_пользователя}` и `${имя_репозитория}` соответствующие значения.
-
+### Описание
+Интерактивная страница для загрузки изображений из интернета, 
+разработанная в рамках прохождения учебной программы курса
+"Web-разработчик" обучающей платформы Яндекс.Практикум.
+### Функциональность
+<!-- * Аутентификация по api -->
+* Добавление изображений по ссылке в интернете
+* Возможность редактировать профиль пользователя
+* Возможность изменять аватар пользователя
+* Возможность ставить лайки на понравившиеся изображения
+### Технологии
+JavaScript
+NodeJs
+Express
+Mongoose
+### Инструкция по установке на локальный компьютер
+Клонировать репозиторий и перейти в папку проекта
 ```
-[![Tests for sprint 13](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-13-sprint.yml) 
-
-[![Tests for sprint 14](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-14-sprint.yml)
+git clone https://github.com/otr-web-study/express-mesto-gha.git && cd express-mesto-gha
 ```
-
-
-## Директории
-
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+Запустить установку и сборку проекта
+```
+mpm install && npm run start

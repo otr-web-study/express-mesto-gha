@@ -1,12 +1,21 @@
 const Card = require('../models/card');
+const { handleObjectNotFound, handleError } = require('../utils/utils');
+
+const updateCard = (res, cardId, data) => {
+  Card.findByIdAndUpdate(cardId, data, {
+    new: true, runValidators: true,
+  })
+    .then(handleObjectNotFound)
+    .then((card) => card.populate(['owner', { path: 'likes' }]))
+    .then((card) => res.send(card))
+    .catch((err) => handleError(err, res));
+};
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .populate(['owner', { path: 'likes' }])
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(500).send({
-      message: `Произошла ошибка: ${err.name} - ${err.message}`,
-    }));
+    .catch((err) => handleError(err, res));
 };
 
 module.exports.createCard = (req, res) => {
@@ -16,9 +25,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => card.populate(['owner', { path: 'likes' }]))
     .then((card) => res.status(201).send(card))
-    .catch((err) => res.status(500).send({
-      message: `Произошла ошибка: ${err.name} - ${err.message}`,
-    }));
+    .catch((err) => handleError(err, res));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -26,33 +33,17 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findByIdAndRemove(cardId)
     .then(() => res.send())
-    .catch((err) => res.status(500).send({
-      message: `Произошла ошибка: ${err.name} - ${err.message}`,
-    }));
+    .catch((err) => handleError(err, res));
 };
 
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, {
-    new: true, runValidators: true,
-  })
-    .then((card) => card.populate(['owner', { path: 'likes' }]))
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({
-      message: `Произошла ошибка: ${err.name} - ${err.message}`,
-    }));
+  updateCard(res, cardId, { $addToSet: { likes: req.user._id } });
 };
 
 module.exports.unlikeCard = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, {
-    new: true, runValidators: true,
-  })
-    .then((card) => card.populate(['owner', { path: 'likes' }]))
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({
-      message: `Произошла ошибка: ${err.name} - ${err.message}`,
-    }));
+  updateCard(res, cardId, { $pull: { likes: req.user._id } });
 };
