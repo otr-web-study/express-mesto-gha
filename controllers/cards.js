@@ -33,10 +33,8 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findById(cardId)
     .then(handleObjectNotFound)
-    .then((card) => {
-      card.remove();
-      res.send({ message: 'Пост удалён' });
-    })
+    .then((card) => card.remove())
+    .then(() => res.send({ message: 'Пост удалён' }))
     .catch((err) => handleError(err, res));
 };
 
