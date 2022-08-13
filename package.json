@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/otr-web-study/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "otr-web-study",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/otr-web-study/express-mesto-gha/issues"
