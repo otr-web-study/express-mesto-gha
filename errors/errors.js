@@ -5,6 +5,7 @@ class ObjectNotFoundError extends Error {
     if (!this.message) {
       this.message = 'Object not found.';
     }
+    this.statusCode = 404;
   }
 }
 

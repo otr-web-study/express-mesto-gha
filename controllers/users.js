@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { handleObjectNotFound, handleError } = require('../utils/utils');
 
@@ -26,9 +28,14 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => res.status(201).send(user))
     .catch((err) => handleError(err, res));
 };
@@ -45,4 +52,20 @@ module.exports.updateAvatar = (req, res) => {
   const userId = req.user._id;
 
   updateUser(res, userId, { avatar });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
+
+      res.send({ token });
+    })
+    .catch((err) => handleError(err, res));
 };
