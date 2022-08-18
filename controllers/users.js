@@ -69,3 +69,8 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => handleError(err, res));
 };
+
+module.exports.getCurrentUser = (req, res) => {
+  req.params.userId = req.user._id;
+  this.getUser(req, res);
+};

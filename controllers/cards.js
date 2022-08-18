@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { handleObjectNotFound, handleError } = require('../utils/utils');
+const { handleObjectNotFound, handleError, isCurrentUserOwner } = require('../utils/utils');
 
 const updateCard = (res, cardId, data) => {
   Card.findByIdAndUpdate(cardId, data, {
@@ -33,6 +33,7 @@ module.exports.deleteCard = (req, res) => {
 
   Card.findById(cardId)
     .then(handleObjectNotFound)
+    .then(isCurrentUserOwner)
     .then((card) => card.remove())
     .then(() => res.send({ message: 'Пост удалён' }))
     .catch((err) => handleError(err, res));

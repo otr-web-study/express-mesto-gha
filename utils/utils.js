@@ -1,4 +1,5 @@
 const { ObjectNotFoundError } = require('../errors/errors');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const handleObjectNotFound = (obj) => {
   if (!obj) {
@@ -23,7 +24,15 @@ const handleError = (err, res) => {
   res.status(500).send(message);
 };
 
+const isCurrentUserOwner = (req, obj) => {
+  if (obj.owner._id !== req.user._id) {
+    throw new ForbiddenError();
+  }
+  return obj;
+};
+
 module.exports = {
   handleObjectNotFound,
   handleError,
+  isCurrentUserOwner,
 };

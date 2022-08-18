@@ -31,11 +31,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Поле обязательно к заполнению.'],
     minlength: [8, 'Минимальная длина значения: 8'],
+    select: false,
   },
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
+    .select('+password')
     .then(handleObjectNotFound)
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
