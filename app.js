@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const { ObjectNotFoundError } = require('./errors/errors');
+const authRouter = require('./routes/auth');
+const ObjectNotFoundError = require('./errors/ObjectNotFoundError');
 const { handleError } = require('./utils/utils');
 
 const { PORT = 3000 } = process.env;
@@ -17,8 +19,20 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(bodyParser.json());
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-app.all('*', (req, res) => {
-  handleError(new ObjectNotFoundError('Несуществующий путь.'), res);
+app.use('/', authRouter);
+app.all('*', (req, res, next) => {
+  next(new ObjectNotFoundError('Несуществующий путь.'));
+});
+
+app.use(errors());
+
+app.use((err, req, res, next) => {
+  const { statusCode, message } = handleError(err);
+
+  res.status(statusCode).send({
+    message: `Произошла ошибка: ${message}`,
+  });
+  next();
 });
 
 app.listen(PORT, () => {

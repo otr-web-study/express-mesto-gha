@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { isEmail } = require('validator');
 const { handleObjectNotFound } = require('../utils/utils');
+const { urlPattern } = require('../settings/constants');
 const AuthError = require('../errors/AuthError');
 
 const userSchema = new mongoose.Schema({
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    match: urlPattern,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
@@ -30,7 +32,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Поле обязательно к заполнению.'],
-    minlength: [8, 'Минимальная длина значения: 8'],
     select: false,
   },
 });

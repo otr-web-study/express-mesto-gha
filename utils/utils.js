@@ -1,5 +1,8 @@
-const { ObjectNotFoundError } = require('../errors/errors');
+const ObjectNotFoundError = require('../errors/ObjectNotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
+const CommonServerError = require('../errors/CommonServerError');
+const ConflictError = require('../errors/ConflictError');
 
 const handleObjectNotFound = (obj) => {
   if (!obj) {
@@ -8,20 +11,20 @@ const handleObjectNotFound = (obj) => {
   return obj;
 };
 
-const handleError = (err, res) => {
-  const message = {
-    message: `Произошла ошибка: ${err.name} - ${err.message}`,
-  };
+const handleError = (err) => {
+  if (err.statusCode) {
+    return err;
+  }
 
-  if (err.name === 'ObjectNotFoundError') {
-    res.status(404).send(message);
-    return;
-  }
   if (err.name === 'ValidationError' || err.name === 'CastError') {
-    res.status(400).send(message);
-    return;
+    return new ValidationError();
   }
-  res.status(500).send(message);
+
+  if (err.code === 11000) {
+    return new ConflictError();
+  }
+
+  return new CommonServerError();
 };
 
 const isCurrentUserOwner = (req, obj) => {
