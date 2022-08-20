@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { handleObjectNotFound } = require('../utils/utils');
 const { secret } = require('../settings/constants');
-const AuthError = require('../errors/AuthError');
 
 const updateUser = (res, userId, data) => User.findByIdAndUpdate(userId, data, {
   new: true, runValidators: true,
