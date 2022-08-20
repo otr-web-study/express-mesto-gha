@@ -3,10 +3,11 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const ValidationError = require('../errors/ValidationError');
 const CommonServerError = require('../errors/CommonServerError');
 const ConflictError = require('../errors/ConflictError');
+const AuthError = require('../errors/AuthError');
 
-const handleObjectNotFound = (obj) => {
+const handleObjectNotFound = (obj, isAuth = false) => {
   if (!obj) {
-    throw new ObjectNotFoundError();
+    throw isAuth ? new AuthError() : new ObjectNotFoundError();
   }
   return obj;
 };

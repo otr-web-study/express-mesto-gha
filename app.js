@@ -6,7 +6,7 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const authRouter = require('./routes/auth');
 const ObjectNotFoundError = require('./errors/ObjectNotFoundError');
-const { handleError } = require('./utils/utils');
+const centralizedErrorHandling = require('./middlewares/centralizedErrorHandling');
 
 const { PORT = 3000 } = process.env;
 
@@ -26,14 +26,7 @@ app.all('*', (req, res, next) => {
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode, message } = handleError(err);
-
-  res.status(statusCode).send({
-    message: `Произошла ошибка: ${message}`,
-  });
-  next();
-});
+app.use(centralizedErrorHandling);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

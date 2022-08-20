@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { isEmail } = require('validator');
+const { isEmail, isURL } = require('validator');
 const { handleObjectNotFound } = require('../utils/utils');
-const { urlPattern } = require('../settings/constants');
 const AuthError = require('../errors/AuthError');
 
 const userSchema = new mongoose.Schema({
@@ -20,7 +19,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    match: urlPattern,
+    validate: [isURL, 'Некорректный url.'],
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
@@ -39,11 +38,11 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .select('+password')
-    .then(handleObjectNotFound)
+    .then((user) => handleObjectNotFound(user, true))
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
         if (!matched) {
-          return Promise.resolve(new AuthError());
+          return Promise.reject(new AuthError());
         }
         return user;
       }));

@@ -1,5 +1,7 @@
 const { Joi } = require('celebrate');
+const { isValidObjectId } = require('mongoose');
 const { urlPattern } = require('../settings/constants');
+const ValidationError = require('../errors/ValidationError');
 
 module.exports.ruleCreateUser = {
   body: Joi.object().keys({
@@ -26,7 +28,12 @@ module.exports.ruleUpdateAvatar = {
 
 module.exports.ruleParamsContainsUserId = {
   params: Joi.object().keys({
-    userId: Joi.string().required().alphanum().length(24),
+    userId: Joi.string().required().custom((value) => {
+      if (!isValidObjectId(value)) {
+        throw new ValidationError('Некорректный id.');
+      }
+      return value;
+    }),
   }),
 };
 
