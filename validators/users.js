@@ -13,9 +13,9 @@ module.exports.ruleCreateUser = {
 
 module.exports.ruleUpdateUser = {
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-  }).xor('name', 'about'),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+  }),
 };
 
 module.exports.ruleUpdateAvatar = {

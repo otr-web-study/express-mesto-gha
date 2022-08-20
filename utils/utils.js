@@ -28,7 +28,7 @@ const handleError = (err) => {
 };
 
 const isCurrentUserOwner = (req, obj) => {
-  if (obj.owner._id !== req.user._id) {
+  if (obj.owner._id.toString() !== req.user._id) {
     throw new ForbiddenError();
   }
   return obj;

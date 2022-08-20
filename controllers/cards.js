@@ -30,7 +30,7 @@ module.exports.deleteCard = (req, res, next) => {
 
   Card.findById(cardId)
     .then(handleObjectNotFound)
-    .then(isCurrentUserOwner)
+    .then((card) => isCurrentUserOwner(req, card))
     .then((card) => card.remove())
     .then(() => res.send({ message: 'Пост удалён' }))
     .catch(next);
